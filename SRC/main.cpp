@@ -1,18 +1,20 @@
 #include "mylib.h"
-#define arg1 string(argv[1])
-#define arg2 string(argv[2])
+#define command string(argv[1])
+#define arg1 string(argv[2])
+#define arg2 string(argv[3])
 
 using namespace std;
 
 string doc[] {
     "add (or -a) <note>                       --- add note",
     "remove (or -r) <id of note>              --- delete note",
-    "list (or -l)                             --- all notes"
+    "list (or -l)                             --- all notes",
+    "edit (or -e) <id of note> <new note>     --- edit note"
 };
 
 int main(int argc, char* argv[]) {
     if (argc > 2) {
-        if (arg1== "add" || arg1 == "-a") {
+        if (command == "add" || command == "-a") {
             string note;
 
             for (int i = 2; i < argc; i++){
@@ -25,10 +27,23 @@ int main(int argc, char* argv[]) {
 
 
 
-        else if (arg1 == "remove" || arg1 == "-r") {
-            int id = stoi(argv[2]);
+        else if (command == "remove" || command == "-r") {
+            int id = stoi(arg1);
             if (remove(id) != 0) 
                 cout << "Error while removing note" << endl;
+        }
+
+        else if (command == "edit" || command == "-e") {
+            int id = stoi(arg1);
+            string new_note;
+
+            for (int i = 3; i < argc; i++){
+                new_note += string(argv[i]);
+                new_note += " ";
+            }
+
+            if (edit(new_note, id) != 0) 
+                cout << "Error while editing note" << endl;
         }
 
 
@@ -40,7 +55,7 @@ int main(int argc, char* argv[]) {
 
 
     } else if (argc == 2) {
-        if (arg1 == "list" || arg1== "-l"){
+        if (command == "list" || command == "-l"){
             if (list() != 0) 
                 cout << "Error while listing notes" << endl;
         }
