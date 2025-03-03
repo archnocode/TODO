@@ -6,10 +6,11 @@
 using namespace std;
 
 string doc[] {
-    "add (or -a) <note>                       --- add note",
-    "remove (or -r) <id of note>              --- delete note",
-    "list (or -l)                             --- all notes",
-    "edit (or -e) <id of note> <new note>     --- edit note"
+    "add (or -a) <note>                             --- add note",
+    "remove (or -r) <id of note>                    --- delete note",
+    "list (or -l)                                   --- all notes",
+    "edit (or -e) <id of note> <new note>           --- edit note",
+    "insert (-i) <id before new note> <new note>    --- insert note(off now)"
 };
 
 int main(int argc, char* argv[]) {
@@ -21,8 +22,8 @@ int main(int argc, char* argv[]) {
                 note += string(argv[i]);
                 note += " ";
             }
-            if (add(note, false) != 0) 
-                cout << "Error while adding note" << endl;
+            if (add(note) != 0) 
+                cerr << "Error while adding note" << endl;
         }
 
 
@@ -30,8 +31,23 @@ int main(int argc, char* argv[]) {
         else if (command == "remove" || command == "-r") {
             int id = stoi(arg1);
             if (remove(id) != 0) 
-                cout << "Error while removing note" << endl;
+                cerr << "Error while removing note" << endl;
         }
+
+
+        else if (command == "insert" || command == "-i"){
+            int id = stoi(arg1);
+            string note;
+
+            for (int i = 3; i < argc; i++){
+                note += string(argv[i]);
+                note += " ";
+            }
+
+            if (insert(id, note) != 0)
+                cerr << "Error while inserting note" << endl;
+        }
+
 
         else if (command == "edit" || command == "-e") {
             int id = stoi(arg1);
@@ -43,7 +59,7 @@ int main(int argc, char* argv[]) {
             }
 
             if (edit(new_note, id) != 0) 
-                cout << "Error while editing note" << endl;
+                cerr << "Error while editing note" << endl;
         }
 
 

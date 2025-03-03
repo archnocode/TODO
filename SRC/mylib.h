@@ -7,7 +7,8 @@
 
 using namespace std;
 
-int add(string note, bool rewrite);
+int insert(int id, string note);
+int add(string note);
 int remove(int id);
 int list();
 int edit(string new_note, int id);

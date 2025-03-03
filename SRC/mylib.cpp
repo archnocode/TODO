@@ -8,6 +8,15 @@ string get_filepath(){
     return "/home/" + username + "/.todoconfig";
 }
 
+int get_len(){
+    int lines;
+    ifstream rf(get_filepath());
+    string line;
+    while (getline(rf, line))
+        lines++;
+    return lines;
+}
+
 int rewrite_note(int id, string new_note){
     id--;
     string filePath = get_filepath();
@@ -36,7 +45,7 @@ int rewrite_note(int id, string new_note){
     }
 
     for (size_t i = 0; i < lines.size(); ++i) {
-        if (i != id) 
+        if (i != id)
             wf << lines[i] << endl;
 
         else
@@ -46,15 +55,50 @@ int rewrite_note(int id, string new_note){
     return 0;
 }
 
-int add(string note, bool rewrite) {
+int insert(int id, string note){
+    if (id >= get_len())
+        return -1;
+
+    id--;
+    string filePath = get_filepath();
+    ifstream rf(filePath);
+    if (!rf.is_open()) {
+        cerr << "Ошибка открытия файла для чтения!" << endl;
+        return -1;
+    }
+
+    vector<string> lines;
+    string line;
+    while (getline(rf, line)) {
+        lines.push_back(line);
+    }
+    rf.close();
+
+    if (id < 0 || id >= lines.size()) {
+        cerr << "Некорректный ID заметки!" << endl;
+        return -1;
+    }
+
+    ofstream wf(filePath);
+    if (!wf.is_open()) {
+        cerr << "Ошибка открытия файла для записи!" << endl;
+        return -1;
+    }
+
+    for (size_t i = 0; i < lines.size(); ++i) {
+        wf << lines[i] << endl;
+        if (i == id)
+            wf << note << endl;
+    }
+    wf.close();
+    return 0;
+}
+
+int add(string note) {
 
     string filePath = get_filepath();
     ofstream wf;
-
-    if (rewrite == true)
-        wf.open(filePath); 
-    else
-        wf.open(filePath, ios::app);
+    wf.open(filePath, ios::app);
 
     if (!wf.is_open()) {
         cerr << "Ошибка открытия файла для записи!" << endl;
